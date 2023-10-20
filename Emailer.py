@@ -6,16 +6,25 @@ from email.message import EmailMessage
 
 # Constants
 DIR_PATH = "path_to_directory" # Provide the path to the directory
-CSV_PATH = "database.csv" # Provide the path to the CSV file
+CSV_PATH = "./emaillist.csv" # Provide the path to the CSV file
 
 logger = logging.getLogger("emailer")
 
 def load_csv_to_dict(csv_path):
     email_dict = {}
-    with open(csv_path, mode='r') as infile:
-        reader = csv.reader(infile)
-        email_dict = {rows[0]:rows[1] for rows in reader}
-        logger.debug(email_dict)
+    try:
+        with open(csv_path, mode='r') as infile:
+            reader = csv.reader(infile)
+            email_dict = {rows[0]:rows[1] for rows in reader}
+            logger.debug(email_dict)
+    except FileNotFoundError:
+        # If the file doesn't exist, create an empty one
+        with open(csv_path, mode='w') as outfile:
+            writer = csv.writer(outfile)
+            # You can write headers here if needed
+            # For example: writer.writerow(['filename', 'email'])
+        logger.warning(f"{csv_path} not found. An empty CSV file has been created. please fill up the file.")
+
     logger.info("email data done!")
     return email_dict
 
@@ -26,7 +35,7 @@ def send_email(subject, to_email, file_path, sender_address, sender_password, ma
     '''
     msg = EmailMessage()
     msg['Subject'] = subject
-    msg['From'] = "your_email@gmail.com"
+    msg['From'] = sender_address
     msg['To'] = to_email
 
     logger.debug(msg)
