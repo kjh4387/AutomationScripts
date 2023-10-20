@@ -10,20 +10,20 @@ CSV_PATH = "./emaillist.csv" # Provide the path to the CSV file
 
 logger = logging.getLogger("emailer")
 
-def load_csv_to_dict(csv_path):
+def load_csv_to_dict(emaillist_path):
     email_dict = {}
     try:
-        with open(csv_path, mode='r') as infile:
+        with open(emaillist_path, mode='r') as infile:
             reader = csv.reader(infile)
             email_dict = {rows[0]:rows[1] for rows in reader}
             logger.debug(email_dict)
     except FileNotFoundError:
         # If the file doesn't exist, create an empty one
-        with open(csv_path, mode='w') as outfile:
+        with open(emaillist_path, mode='w') as outfile:
             writer = csv.writer(outfile)
             # You can write headers here if needed
             # For example: writer.writerow(['filename', 'email'])
-        logger.warning(f"{csv_path} not found. An empty CSV file has been created. please fill up the file.")
+        logger.warning(f"{emaillist_path} not found. An empty CSV file has been created. please fill up the file.")
 
     logger.info("email data done!")
     return email_dict
