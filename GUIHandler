@@ -1,0 +1,79 @@
+import tkinter as tk
+import logging
+import DataHandler
+from tkinter import ttk, messagebox
+
+logger = logging.getLogger(__name__)
+
+def prompt_user_data():
+    def submit_data():
+        user_id = id_entry.get()
+        user_pw = pw_entry.get()
+        # You can handle the ID and PW as required. For now, we'll just show them in a messagebox.
+        DataHandler.user_data.put_address(user_id)
+        DataHandler.user_data.put_password(user_pw)
+        DataHandler.user_data.save_userdata()
+        root.destroy()
+
+    # Create the main window
+    root = tk.Tk()
+    root.title("User Data GUI")
+
+    # Create a frame to hold the widgets
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    # ID label and entry
+    id_label = ttk.Label(frame, text="ID:")
+    id_label.grid(row=0, column=0, sticky=tk.W, pady=5)
+    id_entry = ttk.Entry(frame, width=20)
+    id_entry.grid(row=0, column=1, pady=5)
+
+    # Password label and entry
+    pw_label = ttk.Label(frame, text="Password:")
+    pw_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+    pw_entry = ttk.Entry(frame, width=20, show="*")  # 'show="*"' masks the password
+    pw_entry.grid(row=1, column=1, pady=5)
+
+    # Submit button
+    submit_btn = ttk.Button(frame, text="Submit", command=submit_data)
+    submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+# Calling the function to test it
+def prompt_mail_data():
+    def submit_data():
+        mail_server = server_entry.get()
+        mail_port = port_entry.get()
+
+        #server and port handler 제작 필요
+        root.destroy()
+
+    # Create the main window
+    root = tk.Tk()
+    root.title("User Data GUI")
+
+    # Create a frame to hold the widgets
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    # ID label and entry
+    id_label = ttk.Label(frame, text="smtp server:")
+    id_label.grid(row=0, column=0, sticky=tk.W, pady=5)
+    server_entry = ttk.Entry(frame, width=20)
+    server_entry.grid(row=0, column=1, pady=5)
+
+    # Password label and entry
+    port_label = ttk.Label(frame, text="port(465 in general):")
+    port_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+    port_entry = ttk.Entry(frame, width=20, show="*")  # 'show="*"' masks the password
+    port_entry.grid(row=1, column=1, pady=5)
+
+    # Submit button
+    submit_btn = ttk.Button(frame, text="Submit", command=submit_data)
+    submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+prompt_mail_data()
