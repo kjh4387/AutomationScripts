@@ -1,5 +1,4 @@
 import os
-import csv
 import smtplib
 import logging
 from email.message import EmailMessage
@@ -10,25 +9,7 @@ logging.basicConfig(filename='Emailer.log', encoding='utf-8', level=logging.DEBU
 logger = logging.getLogger("emailer")
 
 
-def load_csv_to_dict(emaillist_path):
-    email_dict = {}
-    try:
-        with open(emaillist_path, mode='r') as infile:
-            reader = csv.reader(infile)
-            email_dict = {rows[0].strip() :rows[1].strip() for rows in reader}
-            logger.debug(email_dict)
-            
-    except FileNotFoundError:
-        # If the file doesn't exist, create an empty one
-        with open(emaillist_path, mode='w') as outfile:
-            writer = csv.writer(outfile)
-            # You can write headers here if needed
-            # For example: writer.writerow(['filename', 'email'])
-        logger.warning(f"{emaillist_path} not found. An empty CSV file has been created. please fill up the file.")
 
-    logger.debug(email_dict)
-    logger.info("email data done!")
-    return email_dict
 
 
 def send_email(subject, to_email, file_path):
@@ -53,7 +34,7 @@ def send_email(subject, to_email, file_path):
 
 
 def main():
-    email_dict = load_csv_to_dict(DataHandler.get_csvpath)
+    email_dict = DataHandler.load_csv_to_dict(DataHandler.get_csvpath)
     logger.level = "DEBUG"
     for root, dirs, files in os.walk(DataHandler.get_dirpath):
         for file in files:

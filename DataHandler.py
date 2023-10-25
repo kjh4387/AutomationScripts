@@ -5,7 +5,7 @@ import Pathes
 import re
 import csv
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("DataHandler")
 
 class user_data:
     service_id = 'email_automation'
@@ -31,28 +31,28 @@ class user_data:
 
 
     def put_address(self,address):
-        try:
-            keyring.delete_password(self.service_id, self.address)
-        finally:
-            self.address = address
+        self.password = address
+        self.save_data()
 
 
     def put_password(self,password):
-        self.password = password
+        try:
+            keyring.delete_password(self.service_id, self.address)
+        finally:
+            self.address = password
+        self.save_data()
         
 
     def save_data(self):
         if self.address and self.password is not None:
             user_data = {
                 'address':self.address,
-                'mail_host':self.mail_host,
-                'mail_port':self.mail_port,
             }
             with open(Pathes.userdata_path, 'wb') as file:
                 pickle.dump(user_data,file)
             keyring.set_password(self.service_id,self.address,self.password)
-        else:
-            raise ValueError
+        '''else:
+            raise ValueError'''
         
 
     def load_data(self):
@@ -68,31 +68,27 @@ class user_data:
 class mail_data():
     mail_host = None
     mail_port = None
-    #서버와 포트 관련된 코드(get, set, save, load) 제작 필요
-
     def get_mailhost(self):
-        if self.mailserver is None:
+        if self.mail_host is None:
             raise ValueError
         else:
-            return self.mailserver
+            return self.mail_host
     
     def get_mailport(self):
-        if self.mailport is None:
+        if self.mail_port is None:
             raise 465
         else:
-            return self.mailport
+            return self.mail_port
 
     def put_mailhost(self, hostname):
-        if is_valid_hostname(hostname):
-            self.mail_host = hostname
-        else:
-            raise ValueError
+        self.mail_host = hostname
         
     def put_mailport(self, port_number):
         if is_valid_port(port_number):
             self.mail_port = port_number
         else:
             raise ValueError
+        self.save_data()
 
     def save_data(self):
         if self.mail_host and self.mail_port is not None:
@@ -118,7 +114,8 @@ class mail_data():
 
 
 class mail_template():
-    #템플릿 세팅 및 직렬화 기능 미완성. 구현 필요
+    postingperiod = ''
+    manager = ''
 
     def get_template(self):
         '''
@@ -148,6 +145,7 @@ class mail_template():
         mail_content = template.format(department , postingperiod, manager)
         return mail_content
 
+
     def get_department(self, codename):
         '''
         진료과 코드가 포함된 이름을 입력하면 departmentlist에서 해당하는 진료과명을 찾아 반환합니다.
@@ -159,6 +157,47 @@ class mail_template():
             return dict[code]
         else:
             raise ValueError
+        
+    def get_postingperiod(self):
+        return self.postingperiod
+    
+    def put_postingperiod(self, period):
+        self.postingperiod = period
+        self.save_templatedata()
+
+    def get_manager(self):
+        return self.manager
+    
+    def put_manager(self,manager):
+        self.manager = manager
+        self.save_templatedata()
+
+    def save_templatedata(self):
+        if self.postingperiod and self.manager is not None:
+            template_config = {
+                'postingperiod':self.postingperiod,
+                'manager':self.manager,
+            }
+            with open(Pathes.template_variable_path, 'wb') as file:
+                pickle.dump(template_config,file)
+        else:
+            raise ValueError
+    
+    def load_templatedata(self):
+        try:
+            with open(Pathes.template_variable_path_path,'rb') as file:
+                loaded_data = pickle.load(file)
+                self.postingperiod = loaded_data.get('postingperiod')
+                self.manager = loaded_data.get('manager')
+        except:
+            raise Exception("templateConfigNotExist")
+        
+
+        
+
+    
+        
+
 
 
 def extract_english(text):
@@ -206,3 +245,8 @@ def get_dirpath():
 def get_csvpath():
     #will changed to GUI function
     return "./emaillist.csv"
+
+if __name__ == "__main__":
+    test = user_data()
+    test.put_address("123")
+
