@@ -2,18 +2,14 @@ import logging
 import pickle
 import keyring
 import Pathes
+import re
+import csv
 
 logger = logging.getLogger(__name__)
 
 class user_data:
     service_id = 'email_automation'
-    address = ''
-    mail_server = ''
-    mail_port = ''
-
-    def __init__(self):
-        with open(Pathes.userdata_path, 'rb') as file:
-            loaded_data = pickle.load(file)
+    address = None
 
     def get_address(self):
         if self.address is None:
@@ -45,11 +41,11 @@ class user_data:
         self.password = password
         
 
-    def save_userdata(self):
-        if self.address and self.mail_server and self.mail_port and self.password is not None:
+    def save_data(self):
+        if self.address and self.password is not None:
             user_data = {
                 'address':self.address,
-                'mail_server':self.mail_server,
+                'mail_host':self.mail_host,
                 'mail_port':self.mail_port,
             }
             with open(Pathes.userdata_path, 'wb') as file:
@@ -70,31 +66,59 @@ class user_data:
         
 
 class mail_data():
-    mail_server = None
+    mail_host = None
     mail_port = None
     #서버와 포트 관련된 코드(get, set, save, load) 제작 필요
 
-
-class mail_content:
-
-    def get_mailserver(self):
-        return self.mail_server
-
+    def get_mailhost(self):
+        if self.mailserver is None:
+            raise ValueError
+        else:
+            return self.mailserver
+    
     def get_mailport(self):
-        return self.mail_port
+        if self.mailport is None:
+            raise 465
+        else:
+            return self.mailport
 
+    def put_mailhost(self, hostname):
+        if is_valid_hostname(hostname):
+            self.mail_host = hostname
+        else:
+            raise ValueError
+        
+    def put_mailport(self, port_number):
+        if is_valid_port(port_number):
+            self.mail_port = port_number
+        else:
+            raise ValueError
 
-def get_dirpath():
-    #will changed to GUI function.
-    return "./attatchment_files"
+    def save_data(self):
+        if self.mail_host and self.mail_port is not None:
+            mail_config = {
+                'mail_host':self.mail_host,
+                'mail_port':self.mail_port,
+            }
+            with open(Pathes.mailconfig_path, 'wb') as file:
+                pickle.dump(mail_config,file)
+        else:
+            raise ValueError
+    
+    def load_data(self):
+        try:
+            with open(Pathes.mailconfig_path,'rb') as file:
+                loaded_data = pickle.load(file)
+                self.mail_host = loaded_data.get('mail_host')
+                self.mail_port = loaded_data.get('mail_port')
+        except:
+            raise Exception("MailConfigNotExist")
 
-def get_csvpath():
-    #will changed to GUI function
-    return "./emaillist.csv"
+        
+
 
 class mail_template():
     #템플릿 세팅 및 직렬화 기능 미완성. 구현 필요
-    #template = get_template()
 
     def get_template(self):
         '''
@@ -124,4 +148,61 @@ class mail_template():
         mail_content = template.format(department , postingperiod, manager)
         return mail_content
 
+    def get_department(self, codename):
+        '''
+        진료과 코드가 포함된 이름을 입력하면 departmentlist에서 해당하는 진료과명을 찾아 반환합니다.
+        ex) GS홍길동 -> 일반외과
+        '''
+        code = extract_english(codename)
+        dict = load_csv_to_dict(Pathes.departmentlist_path)
+        if code in dict:
+            return dict[code]
+        else:
+            raise ValueError
 
+
+def extract_english(text):
+    return ''.join([char for char in text.strip() if 'a' <= char <= 'z' or 'A' <= char <= 'Z'])
+
+
+def load_csv_to_dict(csv_path):
+    email_dict = {}
+    try:
+        with open(csv_path, mode='r') as infile:
+            reader = csv.reader(infile)
+            email_dict = {rows[0].strip() :rows[1].strip() for rows in reader}
+            logger.debug(email_dict)
+            
+    except FileNotFoundError:
+        # If the file doesn't exist, create an empty one
+        with open(csv_path, mode='w') as outfile:
+            writer = csv.writer(outfile)
+            # You can write headers here if needed
+            # For example: writer.writerow(['filename', 'email'])
+        logger.warning(f"{csv_path} not found. An empty CSV file has been created. please fill up the file.")
+
+    logger.debug(email_dict)
+    logger.info("email data done!")
+    return email_dict
+
+
+def is_valid_hostname(hostname):
+    # A simple regex pattern for a basic FQDN check
+    pattern = re.compile(r'^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')
+    return pattern.match(hostname) is not None
+
+def is_valid_port(port):
+    try:
+        port_num = int(port)
+        return 1 <= port_num <= 65535
+    except ValueError:
+        return False
+
+
+def get_dirpath():
+    #will changed to GUI function.
+    return "./attatchment_files"
+
+def get_csvpath():
+    #will changed to GUI function
+    return "./emaillist.csv"
