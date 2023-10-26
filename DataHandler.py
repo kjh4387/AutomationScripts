@@ -7,6 +7,25 @@ import csv
 
 logger = logging.getLogger("DataHandler")
 
+class BaseDataHandler:
+    pickle_path = None
+    
+    def save_data(self, data):
+        if not all(data.values()):
+            raise ValueError("Incomplete data")
+        
+        with open(self.pickle_path, 'wb') as file:
+            pickle.dump(data, file)
+
+    def load_data(self):
+        try:
+            with open(self.pickle_path,'rb') as file:
+                return pickle.load(file)
+        except FileNotFoundError:
+            logger.error(f"No configuration found at {self.pickle_path}.")
+            raise Exception(f"ConfigNotExist at {self.pickle_path}")
+
+
 class user_data:
     service_id = 'email_automation'
     address = None
