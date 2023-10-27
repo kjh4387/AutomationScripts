@@ -2,6 +2,7 @@ import tkinter as tk
 import logging
 import DataHandler
 from tkinter import ttk, messagebox
+import re
 
 logger = logging.getLogger(__name__)
 user_data = DataHandler.user_data()
@@ -9,14 +10,24 @@ mail_data = DataHandler.mail_data()
 mail_template = DataHandler.mail_template()
 
 def prompt_user_data():
-    def submit_data():
-        user_data.put_address(id_entry.get())
-        user_data.put_password(pw_entry.get())
+    def submit_user_data():
+        email = id_entry.get()
+        password = pw_entry.get()
+
+        if not is_valid_email(email):
+            messagebox.showerror("Invalid Input", "Please enter a valid email address.")
+            return
+        if not password:
+            messagebox.showerror("Invalid Input", "Password cannot be empty.")
+            return
+
+        user_data.put_address(email)
+        user_data.put_password(password)
         root.destroy()
 
     # Create the main window
     root = tk.Tk()
-    root.title("User Data GUI")
+    root.title("메일 주소 변경")
 
     # Create a frame to hold the widgets
     frame = ttk.Frame(root, padding="10")
@@ -35,23 +46,31 @@ def prompt_user_data():
     pw_entry.grid(row=1, column=1, pady=5)
 
     # Submit button
-    submit_btn = ttk.Button(frame, text="Submit", command=submit_data)
+    submit_btn = ttk.Button(frame, text="적용", command=submit_user_data)
     submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
 
     root.mainloop()
 
 
 def prompt_mail_data():
-    def submit_data():
-        mail_data.put_mailhost(server_entry.get())
-        mail_data.put_mailport(port_entry.get())
+    def submit_mail_data():
+        server = server_entry.get()
+        port = port_entry.get()
 
-        #server and port handler 제작 필요
+        if not server:
+            messagebox.showerror("Invalid Input", "SMTP server cannot be empty.")
+            return
+        if not is_valid_port(port):
+            messagebox.showerror("Invalid Input", "Please enter a valid port number.")
+            return
+
+        mail_data.put_mailhost(server)
+        mail_data.put_mailport(port)
         root.destroy()
 
     # Create the main window
     root = tk.Tk()
-    root.title("User Data GUI")
+    root.title("메일 공급자 변경")
 
     # Create a frame to hold the widgets
     frame = ttk.Frame(root, padding="10")
@@ -70,17 +89,25 @@ def prompt_mail_data():
     port_entry.grid(row=1, column=1, pady=5)
 
     # Submit button
-    submit_btn = ttk.Button(frame, text="Submit", command=submit_data)
+    submit_btn = ttk.Button(frame, text="적용", command=submit_mail_data)
     submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
 
     root.mainloop()
 
 def prompt_template_data():
-    def submit_data():
-        mail_template.put_postingperiod(period_entry.get())
-        mail_template.put_manager(manager_entry.get())
+    def submit_template_data():
+        period = period_entry.get()
+        manager = manager_entry.get()
 
-        #server and port handler 제작 필요
+        if not period:
+            messagebox.showerror("Invalid Input", "Posting period cannot be empty.")
+            return
+        if not manager:
+            messagebox.showerror("Invalid Input", "Manager information cannot be empty.")
+            return
+
+        mail_template.put_postingperiod(period)
+        mail_template.put_manager(manager)
         root.destroy()
 
     # Create the main window
@@ -102,7 +129,18 @@ def prompt_template_data():
     manager_entry.grid(row=1, column=1, pady=5)
 
     # Submit button
-    submit_btn = ttk.Button(frame, text="Submit", command=submit_data)
+    submit_btn = ttk.Button(frame, text="적용", command=submit_template_data)
     submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
 
     root.mainloop()
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return re.match(pattern, email)
+
+def is_valid_port(port):
+    try:
+        port_num = int(port)
+        return 0 <= port_num <= 65535
+    except ValueError:
+        return False
