@@ -54,3 +54,10 @@ class ConfigurationManager:
         password = keyring.get_password('email_automation', username)
         return username, password
 
+    def get(self, key, default=None):
+        """ Get a value from the configuration data. """
+        return self.config_data.get(key, default)
+
+    def get_default_directory(self):
+        """ Special method to get the default directory path. """
+        return self.get('default_directory', '')

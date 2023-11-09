@@ -63,7 +63,9 @@ class DepartmentManager(CSVManager):
 
 class ContactManager(CSVManager):
     # Inherits all methods from CSVManager
-    # Additional contact-specific methods can be added here
-    pass
+    def get_email_by_department_and_name(self, department_code, name):
+    # The key is a combination of department code and name
+        key = f"{department_code}{name}"
+        return self.get(key)
 
 

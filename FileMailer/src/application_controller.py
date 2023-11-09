@@ -8,20 +8,40 @@ from configuration_manager import ConfigurationManager
 from logger import Logger
 
 class ApplicationController:
-    def __init__(self):
-        # Configuration for the application, if there's a specific directory to start with, it can be passed here.
-        self.configuration_manager = ConfigurationManager("./config")
-        self.logger = Logger()
-        
-        # Start with an empty or default path if you have one
-        default_path = self.configuration_manager.get('default_path', '')
-        self.file_manager = FileManager(default_path)
-        
-        self.template_manager = TemplateManager()
-        self.email_manager = EmailManager(self.configuration_manager, self.logger)
-        self.contact_manager = ContactManager(self.configuration_manager, self.logger)
-        self.department_manager = DepartmentManager(self.configuration_manager, self.logger)
+    def __init__(self, config_file,logger):
+        self.logger = logger
+        self.config_manager = ConfigurationManager(config_file, self.logger)
 
+        # Load configurations
+        contact_csv_file = self.config_manager.get('contact_csv_file')
+        department_csv_file = self.config_manager.get('department_csv_file')
+
+        self.contact_manager = ContactManager(contact_csv_file, self.logger)
+        self.department_manager = DepartmentManager(department_csv_file, self.logger)
+        
+        # Load data from CSV files
+        self.contact_manager.load()
+        self.department_manager.load()
+
+        # Initialize FileManager with the directory from the configuration
+        default_directory = self.config_manager.get_default_directory()
+        self.file_manager = FileManager(default_directory)
+        
+        # Initialize other managers
+        self.template_manager = TemplateManager()
+        self.email_manager = EmailManager(self.config_manager, self.logger)
+
+    # Methods using CSVManager instances
+    def get_contact(self, key):
+        """Get contact details from ContactManager"""
+        return self.contact_manager.get(key)
+    
+    def get_contact_email(self, department_code, name):
+        return self.contact_manager.get_email_by_department_and_name(department_code, name)
+    
+    def get_department_name(self, department_code):
+        return self.department_manager.get(department_code)
+    
     def update_file_directory(self, new_directory):
         # Update the directory in file manager and possibly refresh the file list
         try:
