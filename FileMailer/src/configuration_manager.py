@@ -25,8 +25,10 @@ class ConfigurationManager:
                 self.logger.log("Configuration loaded successfully.")
         except FileNotFoundError:
             self.logger.log(f"No configuration file found at {self.config_file}. A new one will be created upon saving.", level=logging.WARNING)
+            self.create_default_config()
         except json.JSONDecodeError as e:
             self.logger.log(f"Error decoding JSON from the configuration file: {e}", level=logging.ERROR)
+            self.create_default_config()
 
     def save_config(self):
         """ Save configuration to a JSON file, excluding the password """
@@ -47,10 +49,6 @@ class ConfigurationManager:
         except Exception as e:
             self.logger.log(f"Failed to save configuration: {e}", level=logging.ERROR)
 
-    def set(self, key, value):
-        self.config_data[key] = value
-        self.save_config()
-    
 
     def set_email_credentials(self, username, password):
         """ Set email username and save password securely in the keyring """
@@ -69,6 +67,15 @@ class ConfigurationManager:
 
     def get_config_path():
         return 'FileMailer/config.json'
+    
+    def create_default_config(self):
+        """ Create a default configuration with essential settings """
+        self.config_data = {
+            "contact_data": "./FileMailer/contacts.csv",
+            "department_data": "./FileMailer/departments.csv",
+            "directory": "./FileMailer/tests/test"
+        }
+        self.save_config()
     
 
     

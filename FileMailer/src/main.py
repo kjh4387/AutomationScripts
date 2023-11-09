@@ -121,6 +121,7 @@ class EmailAutomationApp:
             success = self.controller.update_file_directory(directory)
             if success:
                 self.refresh_file_list()
+                self.controller.config_manager.set('directory',directory)
             else:
                 messagebox.showerror("Error", "Failed to update the directory.")
 
