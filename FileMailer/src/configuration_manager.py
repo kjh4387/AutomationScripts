@@ -1,17 +1,16 @@
 import keyring
 import logging
 import json
-from .logger import Logger
 
 
 # Here, we are assuming that the Logger class has been defined in the same file or is accessible in the environment.
 # This would replace the previous ConfigurationManager class definition in the same file or module.
 
 class ConfigurationManager:
-    def __init__(self, config_file, log_file='config_manager.log'):
+    def __init__(self, config_file, logger):
         self.config_file = config_file
         self.config_data = {}
-        self.logger = Logger(log_file)
+        self.logger = logger
 
     def load_config(self):
         """ Load configuration from a JSON file """
