@@ -1,0 +1,206 @@
+import tkinter as tk
+import logging
+import DataHandler
+from tkinter import ttk, messagebox
+import re
+
+logger = logging.getLogger(__name__)
+user_data = DataHandler.user_data()
+mail_data = DataHandler.mail_data()
+mail_template = DataHandler.mail_template()
+
+
+def setup_generic_gui(title, fields, submit_func):
+    root = tk.Tk()
+    root.title(title)
+
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    entries = {}
+    for i, (label_text, is_password) in enumerate(fields.items()):
+        label = ttk.Label(frame, text=label_text)
+        label.grid(row=i, column=0, sticky=tk.W, pady=5)
+        entry = ttk.Entry(frame, width=20, show="*" if is_password else "")
+        entry.grid(row=i, column=1, pady=5)
+        entries[label_text] = entry
+
+    submit_btn = ttk.Button(frame, text="Submit", command=lambda: submit_func(entries, root))
+    submit_btn.grid(row=len(fields), column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+
+def submit_user_data(entries, root):
+    email = entries["ID:"].get()
+    password = entries["Password:"].get()
+
+    if not is_valid_email(email):
+        messagebox.showerror("Invalid Input", "Please enter a valid email address.")
+        return
+    if not password:
+        messagebox.showerror("Invalid Input", "Password cannot be empty.")
+        return
+
+    user_data.put_address(email)
+    user_data.put_password(password)
+    root.destroy()
+
+
+def prompt_user_data():
+    fields = {"ID:": False, "Password:": True}
+    setup_generic_gui("User Data GUI", fields, submit_user_data)
+
+
+def prompt_mail_data():
+    
+
+    # Create the main window
+    root = tk.Tk()
+    root.title("메일 공급자 변경")
+
+    # Create a frame to hold the widgets
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    # ID label and entry
+    id_label = ttk.Label(frame, text="smtp server:")
+    id_label.grid(row=0, column=0, sticky=tk.W, pady=5)
+    server_entry = ttk.Entry(frame, width=20)
+    server_entry.grid(row=0, column=1, pady=5)
+
+    # Password label and entry
+    port_label = ttk.Label(frame, text="port(465 in general):")
+    port_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+    port_entry = ttk.Entry(frame, width=20)  
+    port_entry.grid(row=1, column=1, pady=5)
+
+    # Submit button
+    submit_btn = ttk.Button(frame, text="적용", command=submit_mail_data)
+    submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+    def submit_mail_data():
+        server = server_entry.get()
+        port = port_entry.get()
+
+        if not server:
+            messagebox.showerror("Invalid Input", "SMTP server cannot be empty.")
+            return
+        if not is_valid_port(port):
+            messagebox.showerror("Invalid Input", "Please enter a valid port number.")
+            return
+
+        mail_data.put_mailhost(server)
+        mail_data.put_mailport(port)
+        root.destroy()
+
+
+def prompt_template_data():
+    def submit_template_data():
+        period = period_entry.get()
+        manager = manager_entry.get()
+
+        if not period:
+            messagebox.showerror("Invalid Input", "Posting period cannot be empty.")
+            return
+        if not manager:
+            messagebox.showerror("Invalid Input", "Manager information cannot be empty.")
+            return
+
+        mail_template.put_postingperiod(period)
+        mail_template.put_manager(manager)
+        root.destroy()
+
+    # Create the main window
+    root = tk.Tk()
+    root.title("메일 내용 지정")
+
+    # Create a frame to hold the widgets
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    period_label = ttk.Label(frame, text="게시기간:")
+    period_label.grid(row=0, column=0, sticky=tk.W, pady=5)
+    period_entry = ttk.Entry(frame, width=20)
+    period_entry.grid(row=0, column=1, pady=5)
+
+    manager_label = ttk.Label(frame, text="담당자(내선번호):")
+    manager_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+    manager_entry = ttk.Entry(frame, width=20)  
+    manager_entry.grid(row=1, column=1, pady=5)
+
+    # Submit button
+    submit_btn = ttk.Button(frame, text="적용", command=submit_template_data)
+    submit_btn.grid(row=2, column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return re.match(pattern, email)
+
+def is_valid_port(port):
+    try:
+        port_num = int(port)
+        return 0 <= port_num <= 65535
+    except ValueError:
+        return False
+
+
+import tkinter as tk
+from tkinter import ttk, messagebox, scrolledtext
+import DataHandler
+
+# Assume DataHandler has the following two new methods:
+# DataHandler.get_mail_template() -> str
+# DataHandler.set_mail_template(str) -> None
+# DataHandler.get_email_addresses() -> dict
+
+
+def main_gui():
+    root = tk.Tk()
+    root.title("Main GUI")
+
+    # Frame for Mail Template
+    template_frame = ttk.LabelFrame(root, text="Mail Template", padding="10")
+    template_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=10, pady=5)
+
+    # Text box for mail template with a scrollbar
+    template_text = scrolledtext.ScrolledText(template_frame, wrap=tk.WORD, height=5, width=50)
+    template_text.grid(row=0, column=0, sticky=(tk.W, tk.E))
+    template_text.insert(tk.INSERT, DataHandler.get_mail_template())
+
+    # Save Template Button
+    save_template_button = ttk.Button(template_frame, text="Save Changes",
+                                      command=lambda: DataHandler.set_mail_template(template_text.get("1.0", tk.END)))
+    save_template_button.grid(row=1, column=0, pady=5)
+
+    # Frame for Email List
+    email_list_frame = ttk.LabelFrame(root, text="Email Addresses", padding="10")
+    email_list_frame.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=10, pady=5)
+
+    # Listbox to show email addresses
+    email_listbox = tk.Listbox(email_list_frame, height=10, width=50)
+    email_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E))
+
+    # Populate the listbox with email addresses
+    for name, email in DataHandler.get_email_addresses().items():
+        email_listbox.insert(tk.END, f"{name}: {email}")
+
+    # Settings Button
+    settings_button = ttk.Button(root, text="Settings", command=prompt_mail_data)
+    settings_button.grid(row=2, column=0, sticky=tk.W, padx=10, pady=5)
+
+    # Send Button
+    send_button = ttk.Button(root, text="Send", command=send_email)  # Assuming there's a send_email function
+    send_button.grid(row=2, column=0, sticky=tk.E, padx=10, pady=5)
+
+    # Run the GUI event loop
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main_gui()

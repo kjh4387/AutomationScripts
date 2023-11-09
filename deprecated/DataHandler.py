@@ -1,9 +1,10 @@
 import logging
 import pickle
 import keyring
-import Pathes
+import Paths
 import re
 import csv
+import RenderText
 
 logger = logging.getLogger("DataHandler")
 
@@ -67,7 +68,7 @@ class user_data:
             user_data = {
                 'address':self.address,
             }
-            with open(Pathes.userdata_path, 'wb') as file:
+            with open(Paths.userdata_path, 'wb') as file:
                 pickle.dump(user_data,file)
             keyring.set_password(self.service_id,self.address,self.password)
         '''else:
@@ -76,7 +77,7 @@ class user_data:
 
     def load_data(self):
         try:
-            with open(Pathes.userdata_path,'rb') as file:
+            with open(Paths.userdata_path,'rb') as file:
                 loaded_data = pickle.load(file)
                 self.address = loaded_data.get('address')
             self.password = keyring.get_password(self.service_id, self.address)
@@ -115,14 +116,14 @@ class mail_data():
                 'mail_host':self.mail_host,
                 'mail_port':self.mail_port,
             }
-            with open(Pathes.mailconfig_path, 'wb') as file:
+            with open(Paths.mailconfig_path, 'wb') as file:
                 pickle.dump(mail_config,file)
         else:
             raise ValueError
     
     def load_data(self):
         try:
-            with open(Pathes.mailconfig_path,'rb') as file:
+            with open(Paths.mailconfig_path,'rb') as file:
                 loaded_data = pickle.load(file)
                 self.mail_host = loaded_data.get('mail_host')
                 self.mail_port = loaded_data.get('mail_port')
@@ -133,8 +134,8 @@ class mail_data():
 
 
 class mail_template():
-    postingperiod = ''
-    manager = ''
+
+    _instance = None
 
     def get_template(self):
         '''
@@ -142,7 +143,7 @@ class mail_template():
         '''
         template = ''
         try:
-            with open(Pathes.template_path, 'r') as f:
+            with open(Paths.template_path, 'r') as f:
                 while True:
                     line = f.readline()
                     if not line: break
@@ -171,7 +172,7 @@ class mail_template():
         ex) GS홍길동 -> 일반외과
         '''
         code = extract_english(codename)
-        dict = load_csv_to_dict(Pathes.departmentlist_path)
+        dict = load_csv_to_dict(Paths.departmentlist_path)
         if code in dict:
             return dict[code]
         else:
@@ -197,14 +198,14 @@ class mail_template():
                 'postingperiod':self.postingperiod,
                 'manager':self.manager,
             }
-            with open(Pathes.template_variable_path, 'wb') as file:
+            with open(Paths.template_variable_path, 'wb') as file:
                 pickle.dump(template_config,file)
         else:
             raise ValueError
     
     def load_templatedata(self):
         try:
-            with open(Pathes.template_variable_path_path,'rb') as file:
+            with open(Paths.template_variable_path_path,'rb') as file:
                 loaded_data = pickle.load(file)
                 self.postingperiod = loaded_data.get('postingperiod')
                 self.manager = loaded_data.get('manager')
