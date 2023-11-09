@@ -11,7 +11,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-class EmailSender:
+class EmailManager:
     def __init__(self, config_manager, logger):
         self.config_manager = config_manager
         self.logger = logger

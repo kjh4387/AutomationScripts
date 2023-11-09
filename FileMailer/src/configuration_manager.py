@@ -54,17 +54,3 @@ class ConfigurationManager:
         password = keyring.get_password('email_automation', username)
         return username, password
 
-# Example usage:
-config_manager = ConfigurationManager('config.json')
-config_manager.load_config()  # Load the configuration file
-
-# Set email credentials
-config_manager.set_email_credentials('user@example.com', 'securepassword')
-
-# Save the configuration to file
-config_manager.save_config()
-
-# Get email credentials
-username, password = config_manager.get_email_credentials()
-print(f"Email username: {username}")
-print(f"Email password: {'*' * len(password)}")  # For security reasons, don't print the actual password

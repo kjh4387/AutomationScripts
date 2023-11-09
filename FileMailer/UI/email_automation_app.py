@@ -1,11 +1,9 @@
-import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-
 # Here is how you can implement the tabbed interface in Tkinter using the `ttk.Notebook` widget.
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
+
 
 class EmailAutomationApp:
     def __init__(self, root):
@@ -13,6 +11,9 @@ class EmailAutomationApp:
         self.root.title("Email Automation Program")
         self.setup_menu()
         self.setup_tabs()
+    
+    def run(self):
+        self.root.mainloop()
 
     def setup_menu(self):
         menu_bar = tk.Menu(self.root)
@@ -46,28 +47,84 @@ class EmailAutomationApp:
         print("About dialog placeholder")
 
     def setup_tabs(self):
-        # Create the tab control
         tab_control = ttk.Notebook(self.root)
 
-        # Define the tabs
-        self.template_files_tab = ttk.Frame(tab_control)
-        self.contacts_departments_tab = ttk.Frame(tab_control)
-        self.preview_tab = ttk.Frame(tab_control)
-        self.progress_tab = ttk.Frame(tab_control)
+        # Rename template_files_tab to mailing_tab
+        self.mailing_tab = ttk.Frame(tab_control)
+        self.contacts_tab = ttk.Frame(tab_control)
+        self.departments_tab = ttk.Frame(tab_control)
 
-        # Add tabs to the tab control
-        tab_control.add(self.template_files_tab, text='Templates & Files')
-        tab_control.add(self.contacts_departments_tab, text='Contacts & Departments')
-        tab_control.add(self.preview_tab, text='Preview')
-        tab_control.add(self.progress_tab, text='Progress')
+        # Add renamed mailing_tab to the notebook control
+        tab_control.add(self.mailing_tab, text='Mailing')
+        tab_control.add(self.contacts_tab, text='Contacts')
+        tab_control.add(self.departments_tab, text='Departments')
 
-        # Pack to make visible
         tab_control.pack(expand=1, fill="both")
 
-    def run(self):
-        self.root.mainloop()
+        # Call methods to populate each tab
+        self.setup_mailing_tab()
+        #self.setup_contacts_tab()
+        #self.setup_departments_tab()
 
-# Create the main application window
+
+    def setup_mailing_tab(self):
+
+        # Template Editor Section
+        template_editor_label = ttk.Label(self.mailing_tab, text="Template Editor")
+        template_editor_label.pack(anchor='nw')
+        self.template_editor = tk.Text(self.mailing_tab, height=10)
+        self.template_editor.pack(fill='x', expand=True)
+
+        # Folder Select Section
+        
+        folder_select_frame = ttk.Frame(self.mailing_tab)
+        folder_select_frame.pack(fill='x', expand=True)
+
+        self.current_folder_label = ttk.Label(folder_select_frame, text="No folder selected")
+        self.current_folder_label.pack(side='left', fill='x', expand=True)
+
+        self.select_folder_button = ttk.Button(folder_select_frame, text="Select Folder", command=self.select_folder)
+        self.select_folder_button.pack(side='right')
+
+        # File List Section
+        files_label = ttk.Label(self.mailing_tab, text="Files to Send")
+        files_label.pack(anchor='nw')
+        self.files_listbox = tk.Listbox(self.mailing_tab, height=10)
+        self.files_listbox.pack(fill='x', expand=True)
+
+        
+        
+         # Progress Section
+        progress_label = ttk.Label(self.mailing_tab, text="Progress")
+        progress_label.pack(anchor='nw')
+        self.progress_bar = ttk.Progressbar(self.mailing_tab, orient='horizontal', mode='determinate')
+        self.progress_bar.pack(fill='x', expand=True)
+        self.progress_log = tk.Text(self.mailing_tab, height=5, state='disabled')
+        self.progress_log.pack(fill='x', expand=True)
+                
+        # Controls for Sending Emails
+        send_controls_frame = ttk.Frame(self.mailing_tab)
+        send_controls_frame.pack(fill='x', expand=True)
+
+        self.send_button = ttk.Button(send_controls_frame, text="Send Emails", command=self.send_emails)
+        self.send_button.pack(side='right')
+
+       
+    
+    def select_folder(self):
+            directory = filedialog.askdirectory()
+            if directory:  # If a directory was selected
+                self.current_folder_label.config(text=directory)
+                self.controller.update_file_directory(directory)
+                self.refresh_file_list()
+        
+
+    def send_emails(self):
+        # Placeholder for send email logic
+        pass
+
+    # ... rest of the class remains the same ...
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = EmailAutomationApp(root)
