@@ -74,10 +74,36 @@ class ConfigurationManager:
             "contact_data": "./FileMailer/contacts.csv",
             "department_data": "./FileMailer/departments.csv",
             "directory": "./FileMailer/tests/test"
+            
         }
         self.save_config()
-    
 
+    def set_current_template_path(self, template_path):
+        """ Set the current template path in the configuration. """
+        self.config_data['current_template_path'] = template_path
+        self.save_config()
+
+    def get_current_template_path(self):
+        """ Get the current template path from the configuration. """
+        return self.get('current_template_path')
+    
+    def set(self, key, value):
+        """ Set a value in the configuration data and save the configuration. """
+        self.config_data[key] = value
+        self.save_config()  # Save changes after updating the configuration
+
+    def get_all_contacts(self):
+        """Retrieve a list of all contacts in the format 'DEPTCodeName: Email'."""
+        try:
+            # Assuming ContactManager has a method called get_all that returns a dictionary
+            # where the keys are 'DEPTCodeName' and the values are 'Email'
+            contacts_dict = self.contact_manager.get_all()
+            # Format the contact information for display in the GUI
+            contacts_list = [f"{dept_code_name}: {email}" for dept_code_name, email in contacts_dict.items()]
+            return contacts_list
+        except Exception as e:
+            self.logger.log(f"Failed to retrieve contacts: {e}", level='ERROR')
+            return []
     
 if __name__ == "__main__":
     logger = Logger("log")

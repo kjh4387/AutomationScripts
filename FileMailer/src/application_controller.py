@@ -5,7 +5,6 @@ from csv_manager import DepartmentManager, ContactManager
 from file_manager import FileManager
 from email_manager import EmailManager
 from configuration_manager import ConfigurationManager
-from logger import Logger
 
 
 class ApplicationController:
@@ -13,12 +12,14 @@ class ApplicationController:
     def __init__(self, config_file,logger):
         self.logger = logger
         self.config_manager = ConfigurationManager(config_file, self.logger)
+        self.load_data()
 
         # Load configurations
         contact_csv_file = self.config_manager.get('contact_data')
         department_csv_file = self.config_manager.get('department_data')
 
-
+        template_directory = self.config_manager.get('template_directory')
+        self.template_manager = TemplateManager(template_directory, self.logger)
 
         self.contact_manager = ContactManager(contact_csv_file, self.logger)
         self.department_manager = DepartmentManager(department_csv_file, self.logger)
@@ -34,6 +35,11 @@ class ApplicationController:
         # Initialize other managers
         self.template_manager = TemplateManager(self.config_manager.get('template_path'),self.logger)
         self.email_manager = EmailManager(self.config_manager, self.logger)
+
+
+    def load_data(self):
+        """load json and set to data"""
+        self.config_manager
 
     # Methods using CSVManager instances
     def get_contact(self, key):
@@ -67,6 +73,10 @@ class ApplicationController:
 
     def get_file_details(self, filename):
         return self.file_manager.get_file_info(filename)
+    
+    def get_current_template_path(self):
+        """ Get the current template path from ConfigurationManager. """
+        return self.config_manager.get_current_template_path()
 
     # More methods will be added here to handle other actions like sending emails,
     # managing contacts, managing departments, etc.

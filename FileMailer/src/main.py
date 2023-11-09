@@ -13,8 +13,12 @@ class EmailAutomationApp:
         self.root.title("Email Automation Program")
         self.controller = controller
         self.logger = logger
+        self.current_template_path = self.controller.get_current_template_path()
+        
         self.setup_menu()
         self.setup_tabs()
+        
+        pass
     
     def run(self):
         self.root.mainloop()
@@ -78,14 +82,27 @@ class EmailAutomationApp:
         template_editor_label.pack(anchor='nw')
         self.template_editor = tk.Text(self.mailing_tab, height=10)
         self.template_editor.pack(fill='x', expand=True)
+        self.load_current_template()
+
+        buttons_frame = ttk.Frame(self.mailing_tab)
+        buttons_frame.pack(fill='x', padx=5, pady=5)  # Pack the frame into the mailing tab
+
+
+        # Load Template Button
+        self.load_template_button = ttk.Button(buttons_frame, text="Load Template", command=self.load_template)
+        self.load_template_button.pack(side = 'left', padx = 2)
+        
+        # Save Template Button
+        self.save_template_button = ttk.Button(buttons_frame, text="Save Template", command=self.save_template)
+        self.save_template_button.pack(side = 'left', padx = 2)
+
+
 
         # Folder Select Section
         
         folder_select_frame = ttk.Frame(self.mailing_tab)
         folder_select_frame.pack(fill='x', expand=True)
 
-        self.current_folder_label = ttk.Label(folder_select_frame, text="No folder selected")
-        self.current_folder_label.pack(side='left', fill='x', expand=True)
 
         self.select_folder_button = ttk.Button(folder_select_frame, text="Select Folder", command=self.select_folder)
         self.select_folder_button.pack(side='right')
@@ -95,6 +112,7 @@ class EmailAutomationApp:
         files_label.pack(anchor='nw')
         self.files_listbox = tk.Listbox(self.mailing_tab, height=10)
         self.files_listbox.pack(fill='x', expand=True)
+        self.load_initial_folder()
 
         
         
@@ -113,7 +131,15 @@ class EmailAutomationApp:
         self.send_button = ttk.Button(send_controls_frame, text="Send Emails", command=self.send_emails)
         self.send_button.pack(side='right')
 
-       
+    def load_initial_folder(self):
+        directory = self.controller.config_manager.config_data["directory"]
+        if directory:
+            success = self.controller.update_file_directory(directory)
+            if success:
+                self.refresh_file_list()
+                self.controller.config_manager.set('directory',directory)
+            else:
+                messagebox.showerror("Error", "Failed to update the directory.")
     
     def select_folder(self):
         directory = filedialog.askdirectory()
@@ -155,23 +181,52 @@ class EmailAutomationApp:
         # Update a label or text widget with the preview content
         self.template_preview_display.config(text=preview_content)
 
+    def load_current_template(self):
+        with open(self.current_template_path) as f:
+            if f is not None:
+                for line in f:
+                    self.template_editor.insert('1.0', line)
+
     def load_template(self):
-        # Open a file dialog to select a template file
-        filepath = filedialog.askopenfilename(filetypes=[("text files", "*.txt"), ("All files", "*.*")])
-        if filepath:
-            # Call the controller to load the template content
-            template_content = self.controller.load_template(filepath)
-            self.template_editor.delete('1.0', tk.END)
-            self.template_editor.insert('1.0', template_content)
+            template_name = filedialog.askopenfilename(
+                initialdir=self.controller.config_manager.get('template_directory', './'),
+                title="Select template",
+                filetypes=(("Text files", "*.txt"), ("All files", "*.*"))
+            )
+            if template_name:
+                template_content = self.controller.get_current_template_path()
+                if template_content is not None:
+                    self.template_editor.delete('1.0', tk.END)
+                    self.template_editor.insert('1.0', template_content)
 
     def save_template(self):
-        # Open a file dialog to save the template file
-        filepath = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("text files", "*.txt"), ("All files", "*.*")])
-        if filepath:
-            # Get the content from the template editor
+        if self.current_template_path:
+            # Save to the current template path
             content = self.template_editor.get('1.0', tk.END)
-            # Call the controller to save the template
-            self.controller.save_template(filepath, content)
+            success = self.controller.template_manager.save_template(self.current_template_path,content)
+            self.show_save_result(success)
+        else:
+            # If no current template path, use "Save As"
+            self.save_template_as()
+
+    def save_template_as(self):
+        filepath = filedialog.asksaveasfilename(
+            # ... existing parameters ...
+        )
+        if filepath:
+            content = self.template_editor.get('1.0', tk.END)
+            success = self.controller.template_manager.save_template(filepath, content)
+            self.show_save_result(success)
+            if success:
+                # Update the current template path in both GUI and ConfigurationManager
+                self.current_template_path = filepath
+                self.controller.config_manager.set_current_template_path(filepath)
+
+    def show_save_result(self, success):
+        if success:
+            messagebox.showinfo("Success", "Template saved successfully.")
+        else:
+            messagebox.showerror("Error", "Failed to save the template.")
 
     def send_emails(self):
         selected_files = [self.files_listbox.get(idx) for idx in self.files_listbox.curselection()]

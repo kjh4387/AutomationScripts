@@ -1,31 +1,41 @@
-import logging
+import os
 
 class TemplateManager:
-    def __init__(self, template_file, logger):
-        self.template_file = template_file
+    def __init__(self, template_directory, logger):
+        self.template_directory = template_directory
         self.logger = logger
-        self.template_content = ""
 
-    def load_template(self):
-        """ Load the email template from a file """
+    def load_template(self, template_name):
+        """ Load a template from a file. """
+        template_path = os.path.join(self.template_directory, template_name)
         try:
-            with open(self.template_file, 'r', encoding='utf-8') as file:
-                self.template_content = file.read()
-                self.logger.log("Email template loaded successfully.", level=logging.INFO)
+            with open(template_path, 'r', encoding='utf-8') as file:
+                return file.read()
         except FileNotFoundError:
-            self.logger.log(f"Template file {self.template_file} not found.", level=logging.ERROR)
+            self.logger.log(f"Template file {template_name} not found.", level='ERROR')
+            return None
         except Exception as e:
-            self.logger.log(f"An error occurred while loading the template: {e}", level=logging.ERROR)
+            self.logger.log(f"An error occurred while loading the template: {e}", level='ERROR')
+            return None
 
-    def render(self, **kwargs):
-        """ Populate the template with given data """
+    def save_template(self, template_path, content):
+        """ Save a template to a file. """
         try:
-            return self.template_content.format(**kwargs)
+            with open(template_path, 'w', encoding='utf-8') as file:
+                file.write(content)
+            self.logger.log(f"Template {template_path} saved successfully.", level='INFO')
+            return True
+        except Exception as e:
+            self.logger.log(f"An error occurred while saving the template: {e}", level='ERROR')
+            return False
+
+    def prepare_template(self, template_content, **kwargs):
+        """ Prepare the template by replacing placeholders with actual values. """
+        try:
+            return template_content.format(**kwargs)
         except KeyError as e:
-            self.logger.log(f"Missing a value for the key in the template: {e}", level=logging.ERROR)
+            self.logger.log(f"Missing a placeholder in the template: {e}", level='ERROR')
             return None
         except Exception as e:
-            self.logger.log(f"An error occurred while rendering the template: {e}", level=logging.ERROR)
+            self.logger.log(f"An error occurred while preparing the template: {e}", level='ERROR')
             return None
-
-
