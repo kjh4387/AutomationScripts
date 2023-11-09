@@ -1,6 +1,9 @@
 import keyring
 import logging
 import json
+import os
+
+from logger import Logger
 
 
 # Here, we are assuming that the Logger class has been defined in the same file or is accessible in the environment.
@@ -11,6 +14,8 @@ class ConfigurationManager:
         self.config_file = config_file
         self.config_data = {}
         self.logger = logger
+        self.load_config()
+        
 
     def load_config(self):
         """ Load configuration from a JSON file """
@@ -42,6 +47,10 @@ class ConfigurationManager:
         except Exception as e:
             self.logger.log(f"Failed to save configuration: {e}", level=logging.ERROR)
 
+    def set(self, key, value):
+        self.config_data[key] = value
+        self.save_config()
+    
 
     def set_email_credentials(self, username, password):
         """ Set email username and save password securely in the keyring """
@@ -58,6 +67,14 @@ class ConfigurationManager:
         """ Get a value from the configuration data. """
         return self.config_data.get(key, default)
 
-    def get_default_directory(self):
-        """ Special method to get the default directory path. """
-        return self.get('default_directory', '')
+    def get_config_path():
+        return 'FileMailer/config.json'
+    
+
+    
+if __name__ == "__main__":
+    logger = Logger("log")
+    defaultconfig = ConfigurationManager("FileMailer/config.json",logger)
+    defaultconfig.set('contact_data','FileMailer/tests/contacts.csv')
+    defaultconfig.set('department_data','FileMailer/tests/departments.csv')
+    defaultconfig.set('directory','FileMailer/tests/test')

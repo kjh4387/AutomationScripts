@@ -5,12 +5,14 @@ from tkinter import ttk, filedialog, messagebox
 from application_controller import ApplicationController
 from logger import Logger
 
+config_path = 'FileMailer/config.json'
 
 class EmailAutomationApp:
-    def __init__(self, root, controller: ApplicationController):
+    def __init__(self, root, controller: ApplicationController, logger: Logger):
         self.root = root
         self.root.title("Email Automation Program")
         self.controller = controller
+        self.logger = logger
         self.setup_menu()
         self.setup_tabs()
     
@@ -126,10 +128,10 @@ class EmailAutomationApp:
         self.files_listbox.delete(0, tk.END)  # Clear the current list
         files = self.controller.get_file_list()
         for file in files:
-            file_info = self.controller.get_file_info(file)
+            file_info = self.controller.get_file_details(file)
             department_name = self.controller.get_department_name(file_info['department_code'])
             email_address = self.controller.get_contact_email(file_info['department_code'], file_info['receiver'])
-            display_text = f"{department_name} - {file_info['receiver']} ({email_address})"
+            display_text = f"{file} - {department_name} - {file_info['receiver']} ({email_address})"
             self.files_listbox.insert(tk.END, display_text)  # Populate the listbox with formatted file info
 
 
@@ -177,12 +179,21 @@ class EmailAutomationApp:
         self.controller.send_emails(template_content, selected_files)
         # Update the GUI with progress
 
+    def prompt_file_select(self):
+        return filedialog.askopenfile()
+    
+    def get_department(self):
+        #will make function to guide select csv files.
+        pass
 
+    def get_concacts(self):
+        pass
+        
     # ... rest of the class remains the same ...
 
 if __name__ == "__main__":
     root = tk.Tk()
     logger = Logger("./log")
-    controller = ApplicationController("./config", logger)
-    app = EmailAutomationApp(root,controller, logger)
+    controller = ApplicationController(config_path, logger)
+    app = EmailAutomationApp(root, controller, logger)
     app.run()

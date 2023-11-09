@@ -7,14 +7,18 @@ from email_manager import EmailManager
 from configuration_manager import ConfigurationManager
 from logger import Logger
 
+
 class ApplicationController:
+    
     def __init__(self, config_file,logger):
         self.logger = logger
         self.config_manager = ConfigurationManager(config_file, self.logger)
 
         # Load configurations
-        contact_csv_file = self.config_manager.get('contact_csv_file')
-        department_csv_file = self.config_manager.get('department_csv_file')
+        contact_csv_file = self.config_manager.get('contact_data')
+        department_csv_file = self.config_manager.get('department_data')
+
+
 
         self.contact_manager = ContactManager(contact_csv_file, self.logger)
         self.department_manager = DepartmentManager(department_csv_file, self.logger)
@@ -24,11 +28,11 @@ class ApplicationController:
         self.department_manager.load()
 
         # Initialize FileManager with the directory from the configuration
-        default_directory = self.config_manager.get_default_directory()
-        self.file_manager = FileManager(default_directory)
+        directory = self.config_manager.get("directory")
+        self.file_manager = FileManager(self.logger, directory)
         
         # Initialize other managers
-        self.template_manager = TemplateManager()
+        self.template_manager = TemplateManager(self.config_manager.get('template_path'),self.logger)
         self.email_manager = EmailManager(self.config_manager, self.logger)
 
     # Methods using CSVManager instances

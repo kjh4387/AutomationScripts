@@ -1,0 +1,20 @@
+2023-11-09 19:07:48,302 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:07:48,303 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:07:48,303 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:07:48,303 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:08:58,692 - EmailAutomationLogger - WARNING - No configuration file found at ../config/config.json. A new one will be created upon saving.
+2023-11-09 19:08:58,692 - EmailAutomationLogger - ERROR - Failed to save configuration: [Errno 2] No such file or directory: '../config/config.json'
+2023-11-09 19:08:58,693 - EmailAutomationLogger - ERROR - Failed to save configuration: [Errno 2] No such file or directory: '../config/config.json'
+2023-11-09 19:08:58,702 - EmailAutomationLogger - ERROR - Failed to save configuration: [Errno 2] No such file or directory: '../config/config.json'
+2023-11-09 19:10:16,331 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-09 19:10:16,332 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:10:16,332 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:10:16,333 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:14:02,901 - EmailAutomationLogger - WARNING - No configuration file found at FileMailer/config.json. A new one will be created upon saving.
+2023-11-09 19:14:02,903 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:14:02,903 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:14:02,903 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-09 19:21:15,934 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-09 19:21:15,935 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb1 in position 2: invalid start byte
+2023-11-09 19:21:15,935 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb8 in position 3: invalid start byte
+2023-11-09 19:21:23,080 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/tests/test

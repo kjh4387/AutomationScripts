@@ -3,8 +3,9 @@ import os
 import re
 
 class FileManager:
-    def __init__(self, directory=None):
+    def __init__(self, logger, directory=None,):
         self.directory = directory if directory else ""
+        self.logger = logger
 
     def update_directory(self, new_directory):
         """Updates the current working directory."""
@@ -21,7 +22,7 @@ class FileManager:
             return [f for f in os.listdir(self.directory) if os.path.isfile(os.path.join(self.directory, f))]
         except FileNotFoundError as e:
             # Handle the error appropriately, such as logging it and returning an empty list
-            print(f"Error listing files: {e}")
+            self.logger(f"Error listing files: {e}")
             return []
 
     def get_file_info(self, filename):
@@ -30,8 +31,8 @@ class FileManager:
         match = re.match(r'([A-Z]+)([\uAC00-\uD7A3]+)', filename)
         if match:
             department, receiver = match.groups()
-            return {'department': department, 'receiver': receiver}
+            return {'department_code': department, 'receiver': receiver}
         else:
             # Handle the case where the filename doesn't match the expected format
-            return {'department': '', 'receiver': ''}
+            return {'department_code': '', 'receiver': ''}
 

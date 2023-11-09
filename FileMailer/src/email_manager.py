@@ -3,7 +3,6 @@ import smtplib
 import logging
 
 import asyncio
-import aiosmtplib
 import time
 
 from email.mime.multipart import MIMEMultipart
@@ -19,10 +18,10 @@ class EmailManager:
 
     def update_config(self):
         """ Update the SMTP settings from the configuration manager. """
-        self.smtp_server = self.config_manager.get_config('smtp_server')
-        self.smtp_port = self.config_manager.get_config('smtp_port')
-        self.username = self.config_manager.get_config('email_username')
-        self.password = self.config_manager.get_config('email_password')
+        self.smtp_server = self.config_manager.get('smtp_server')
+        self.smtp_port = self.config_manager.get('smtp_port')
+        self.username = self.config_manager.get('email_username')
+        self.password = self.config_manager.get('email_password')
 
     async def send_email(self, recipient, subject, body, attachments=None):
         """ Send an email with the given parameters """
