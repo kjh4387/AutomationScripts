@@ -77,6 +77,88 @@ class ApplicationController:
     def get_current_template_path(self):
         """ Get the current template path from ConfigurationManager. """
         return self.config_manager.get_current_template_path()
+    
+    def get_all_contacts(self):
+        """Retrieve a list of all contacts in the format 'DEPTCodeName: Email'."""
+        try:
+            # Assuming ContactManager has a method called get_all that returns a dictionary
+            # where the keys are 'DEPTCodeName' and the values are 'Email'
+            contacts_dict = self.contact_manager.get_all()
+            # Format the contact information for display in the GUI
+            contacts_list = [f"{dept_code_name}: {email}" for dept_code_name, email in contacts_dict.items()]
+            return contacts_list
+        except Exception as e:
+            self.logger.log(f"Failed to retrieve contacts: {e}", level='ERROR')
+            return []
+        
+    def import_contacts_from_csv(self, csv_path):
+        try:
+            # Assuming ContactManager has an import method
+            self.contact_manager.import_from_csv(csv_path)
+            self.logger.log("Contacts imported successfully.", level='INFO')
+            return True
+        except Exception as e:
+            self.logger.log(f"Failed to import contacts: {e}", level='ERROR')
+            return False
 
+    def add_contact(self, contact_details):
+        # Logic to add a new contact
+        self.contact_manager.add(contact_details['name'], contact_details['email'])
+        self.contact_manager.save()
+
+    def edit_contact(self, original_name, contact_details):
+        # Logic to edit an existing contact
+        self.contact_manager.update(original_name, contact_details['email'])
+        self.contact_manager.save()
+
+    def delete_contact(self, contact_name):
+        # Logic to delete an existing contact
+        self.contact_manager.delete(contact_name)
+        self.contact_manager.save()
+
+    def save_contacts(self):
+        # Logic to save all contacts
+        self.contact_manager.save()
+
+    def get_all_departments(self):
+        """Retrieve a list of all departmens in the format 'DEPTCode: name'."""
+        try:
+
+            departments_dict = self.department_manager.get_all()
+            # Format the contact information for display in the GUI
+            departments_list = [f"{code}: {name}" for code, name in departments_dict.items()]
+            return departments_list
+        except Exception as e:
+            self.logger.log(f"Failed to retrieve departments: {e}", level='ERROR')
+            return []
+
+    def add_department(self, department_detailes):
+        # Adds a new department
+        self.department_manager.add(department_detailes['code'], department_detailes['name'])
+        self.department_manager.save()
+    
+    def edit_department(self, original_name, department_details):
+        # Logic to edit an existing contact
+        self.department_manager.update(original_name, department_details['name'])
+        self.department_manager.save()
+
+    def save_department(self):
+        # Logic to save all contacts
+        self.department_manager.save()
+
+    def delete_department(self, department_name):
+        # Logic to delete an existing contact
+        self.department_manager.delete(department_name)
+        self.department_manager.save()
+
+    def import_departments_from_csv(self, csv_path):
+        try:
+            # Assuming ContactManager has an import method
+            self.department_manager.import_from_csv(csv_path)
+            self.logger.log("Departments imported successfully.", level='INFO')
+            return True
+        except Exception as e:
+            self.logger.log(f"Failed to import departments: {e}", level='ERROR')
+            return False
     # More methods will be added here to handle other actions like sending emails,
     # managing contacts, managing departments, etc.

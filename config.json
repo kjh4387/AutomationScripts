@@ -1,0 +1,12 @@
+{
+    "contact_data": "./contacts.csv",
+    "department_data": "./departments.csv",
+    "directory": "C:/Users/\uae40\uc790\ud604/Codes/AutomationScripts/Automailer",
+    "current_template_path": "C:/Users/\uae40\uc790\ud604/Codes/AutomationScripts/FileMailer/templates/\ud15c\ud50c\ub9bf \uc608\uc2dc.txt",
+    "template_variable_period": "'23.11.~'23.12",
+    "template_variable_manager": "\uae40\uc790\ud604(1234)",
+    "subject": "",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "smtp_user": "wkgusdl21@gmail.com"
+}

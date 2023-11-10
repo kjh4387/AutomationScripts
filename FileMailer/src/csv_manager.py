@@ -11,7 +11,7 @@ class CSVManager:
     def load(self):
         """ Load data from a CSV file """
         try:
-            with open(self.csv_file, mode='r', newline='', encoding='utf-8') as csvfile:
+            with open(self.csv_file, mode='r', newline='', encoding='ANSI') as csvfile:
                 reader = csv.reader(csvfile)
                 self.data = {rows[0]: rows[1] for rows in reader}
                 self.logger.log(f"{self.__class__.__name__} data loaded successfully.", level=logging.INFO)
@@ -23,7 +23,7 @@ class CSVManager:
     def save(self):
         """ Save data to a CSV file """
         try:
-            with open(self.csv_file, mode='w', newline='', encoding='utf-8') as csvfile:
+            with open(self.csv_file, mode='w', newline='', encoding='ANSI') as csvfile:
                 writer = csv.writer(csvfile)
                 for key, value in self.data.items():
                     writer.writerow([key, value])
@@ -55,6 +55,19 @@ class CSVManager:
     def search(self, search_term):
         """ Search for data by key or value """
         return {key: value for key, value in self.data.items() if search_term.lower() in key.lower() or search_term.lower() in value.lower()}
+    
+    def get_all(self):
+        self.load()
+        return self.data
+    
+    def import_from_csv(self, csv_path):
+        # Load data from the CSV file
+        with open(csv_path, mode='r', encoding='cp949') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                self.add(row[0], row[1])  # Assuming the CSV has two columns: key and value
+        self.save()  # Save the updated contacts list to the main CSV file
+
 
 class DepartmentManager(CSVManager):
     # Inherits all methods from CSVManager
@@ -67,5 +80,6 @@ class ContactManager(CSVManager):
     # The key is a combination of department code and name
         key = f"{department_code}{name}"
         return self.get(key)
+    
 
 

@@ -1,4 +1,13 @@
 import os
+import string
+import re
+
+class SafeFormatter(string.Formatter):
+        def get_value(self, key, args, kwds):
+            if isinstance(key, str):
+                return kwds.get(key, '{' + key + '}')
+            else:
+                return super().get_value(key, args, kwds)
 
 class TemplateManager:
     def __init__(self, template_directory, logger):
@@ -30,12 +39,16 @@ class TemplateManager:
             return False
 
     def prepare_template(self, template_content, **kwargs):
-        """ Prepare the template by replacing placeholders with actual values. """
+        """ Prepare the template by replacing placeholders with actual values or leaving them if missing. """
+        formatter = SafeFormatter()
         try:
-            return template_content.format(**kwargs)
-        except KeyError as e:
-            self.logger.log(f"Missing a placeholder in the template: {e}", level='ERROR')
-            return None
+            return formatter.format(template_content, **kwargs)
         except Exception as e:
             self.logger.log(f"An error occurred while preparing the template: {e}", level='ERROR')
             return None
+
+    def find_placeholders(self, template_content):
+        """Find placeholders within the template content."""
+        placeholders = re.findall(r'\{(\w+)\}', template_content)
+        return list(set(placeholders))  # Remove duplicates
+    

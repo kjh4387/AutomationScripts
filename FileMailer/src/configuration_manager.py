@@ -16,6 +16,14 @@ class ConfigurationManager:
         self.logger = logger
         self.load_config()
         
+    
+    def save_subject(self, subject):
+        self.set('email_subject', subject)
+        self.save_config()
+
+    def get_subject(self):
+        return self.get('email_subject', default='Default Subject') 
+        
 
     def load_config(self):
         """ Load configuration from a JSON file """
@@ -34,46 +42,44 @@ class ConfigurationManager:
         """ Save configuration to a JSON file, excluding the password """
         try:
             # Remove the password before saving to file
-            email_username = self.config_data.pop('email_username', None)
-            email_password = self.config_data.pop('email_password', None)
+            email_password = self.config_data.pop('smtp_password', None)
             
             with open(self.config_file, 'w') as file:
                 json.dump(self.config_data, file, indent=4)
                 self.logger.log("Configuration saved successfully.")
             
             # Restore the password in the current instance
-            if email_username:
-                self.config_data['email_username'] = email_username
-            if email_password:
-                self.config_data['email_password'] = email_password
         except Exception as e:
             self.logger.log(f"Failed to save configuration: {e}", level=logging.ERROR)
 
 
     def set_email_credentials(self, username, password):
         """ Set email username and save password securely in the keyring """
-        self.config_data['email_username'] = username
+        self.config_data['smtp_user'] = username
         keyring.set_password('email_automation', username, password)
 
     def get_email_credentials(self):
         """ Get email credentials """
-        username = self.config_data.get('email_username')
+        username = self.config_data.get('smtp_user')
         password = keyring.get_password('email_automation', username)
-        return username, password
+        if password:
+            return password
+        else:
+            return ""
 
     def get(self, key, default=None):
         """ Get a value from the configuration data. """
         return self.config_data.get(key, default)
 
     def get_config_path():
-        return 'FileMailer/config.json'
+        return 'config.json'
     
     def create_default_config(self):
         """ Create a default configuration with essential settings """
         self.config_data = {
-            "contact_data": "./FileMailer/contacts.csv",
-            "department_data": "./FileMailer/departments.csv",
-            "directory": "./FileMailer/tests/test"
+            "contact_data": "./contacts.csv",
+            "department_data": "./departments.csv",
+            "directory": "./test"
             
         }
         self.save_config()
@@ -105,9 +111,17 @@ class ConfigurationManager:
             self.logger.log(f"Failed to retrieve contacts: {e}", level='ERROR')
             return []
     
+    def get_email_config(self):
+        return {
+            'smtp_server': self.get('smtp_server',""),
+            'smtp_port': self.get('smtp_port',""),
+            'smtp_user': self.get('smtp_user',""),
+            'smtp_password': self.get_email_credentials(),  # You might be using keyring for the password
+            'use_tls': self.get('use_tls', True),
+
+        }
 if __name__ == "__main__":
     logger = Logger("log")
-    defaultconfig = ConfigurationManager("FileMailer/config.json",logger)
-    defaultconfig.set('contact_data','FileMailer/tests/contacts.csv')
-    defaultconfig.set('department_data','FileMailer/tests/departments.csv')
-    defaultconfig.set('directory','FileMailer/tests/test')
+    defaultconfig = ConfigurationManager("config.json",logger)
+    
+    

@@ -2,8 +2,9 @@ import os
 import smtplib
 import logging
 
-import asyncio
 import time
+
+import socket
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -18,63 +19,62 @@ class EmailManager:
 
     def update_config(self):
         """ Update the SMTP settings from the configuration manager. """
-        self.smtp_server = self.config_manager.get('smtp_server')
-        self.smtp_port = self.config_manager.get('smtp_port')
-        self.username = self.config_manager.get('email_username')
-        self.password = self.config_manager.get('email_password')
 
-    async def send_email(self, recipient, subject, body, attachments=None):
+
+    def send_email(self, recipient, subject, body, attachments=None):
         """ Send an email with the given parameters """
+        email_config = self.config_manager.get_email_config()
         message = MIMEMultipart()
-        message['From'] = self.username
+        message['From'] = email_config['smtp_user']
         message['To'] = recipient
         message['Subject'] = subject
         message.attach(MIMEText(body, 'plain'))
 
         # Add attachments if provided
         if attachments:
-            for attachment in attachments:
-                part = MIMEBase('application', 'octet-stream')
-                try:
-                    with open(attachment, 'rb') as file:
-                        part.set_payload(file.read())
-                    encoders.encode_base64(part)
-                    part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(attachment)}")
-                    message.attach(part)
-                except Exception as e:
-                    self.logger.log(f"Failed to attach file {attachment}: {e}", level=logging.ERROR)
-                    continue  
-
-
-        # Retry logic parameters
-        retries = 3
-        wait_time = 1  # Wait time starts at 1 second
-
-        for attempt in range(retries):
+            part = MIMEBase('application', 'octet-stream')
             try:
-                # Attempt to send the email
-                await self._attempt_send(message)
-                self.logger.log(f"Email sent to {recipient}", level=logging.INFO)
-                break  # If the email is sent successfully, break out of the retry loop
-            except smtplib.SMTPException as e:
-                self.logger.log(f"SMTP error on attempt {attempt + 1} when sending email to {recipient}: {e}", level=logging.ERROR)
-                if attempt < retries - 1:  # If not the last attempt, wait before retrying
-                    time.sleep(wait_time)
-                    wait_time *= 2  # Exponential backoff: double the wait time for the next attempt
-                else:
-                    self.logger.log(f"All retry attempts failed for {recipient}.", level=logging.CRITICAL)
-                    raise  # Re-raise the exception after all attempts fail
-            finally:
-                self.cleanup()
+                with open(attachments, 'rb') as file:
+                    part.set_payload(file.read())
+                encoders.encode_base64(part)
+                part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(attachments)}")
+                message.attach(part)
+            except Exception as e:
+                self.logger.log(f"Failed to attach file {attachments}: {e}", level=logging.ERROR)
 
+
+
+            try:
+                with smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port']) as server:
+                    server.starttls()
+                    server.login(email_config['smtp_user'], email_config['smtp_password'])
+                    server.send_message(message)
+                self.logger.log(f"Email sent to {recipient}", level=logging.INFO)
+            except smtplib.SMTPAuthenticationError:
+                self.logger.log("SMTP Authentication failed. Check username/password.", level=logging.ERROR)
+                raise smtplib.SMTPAuthenticationError("SMTP Authentication failed. Check username/password.")
+            except smtplib.SMTPException as e:
+                self.logger.log(f"SMTP error when sending email to {recipient}: {e}", level=logging.ERROR)
+                raise smtplib.SMTPException(f"SMTP error when sending email to {recipient}: {e}")
+            except Exception as e:
+                self.logger.log(f"Failed to send email to {recipient}: {e}", level=logging.ERROR)
+                raise Exception(f"Failed to send email to {recipient}: {e}")
+    '''
     async def _attempt_send(self, message):
         """ A helper coroutine that attempts to send the email message once. """
-        async with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-            await server.connect()
-            await server.starttls()
-            await server.login(self.username, self.password)
-            await server.send_message(message)
-
+        source_address = "localhost"
+        try:
+            async with aiosmtplib.SMTP(hostname=self.config_manager.config_data["smtp_server"],
+                               port=int(self.config_manager.config_data["smtp_port"]),
+                               source_address=source_address) as server:
+                await server.connect()
+                await server.starttls()
+                await server.login(self.config_manager.config_data["smtp_user"], self.config_manager.config_data["smtp_password"])
+                await server.send_message(message)
+        except KeyError as e:
+            self.logger.log("need email configuration.")
+            raise KeyError
+    '''
     def cleanup(self):
         """ Cleanup resources. Placeholder for any cleanup operations needed. """
         # Perform any necessary cleanup after sending an email

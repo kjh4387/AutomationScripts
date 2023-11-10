@@ -1,15 +1,85 @@
-2023-11-10 00:36:46,601 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb8 in position 3: invalid start byte
-2023-11-10 00:36:46,612 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/tests/test
-2023-11-10 00:36:46,616 - EmailAutomationLogger - INFO - Configuration saved successfully.
-2023-11-10 00:37:11,304 - EmailAutomationLogger - INFO - Configuration loaded successfully.
-2023-11-10 00:37:11,304 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb1 in position 2: invalid start byte
-2023-11-10 00:37:11,305 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb8 in position 3: invalid start byte
-2023-11-10 00:37:11,315 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/tests/test
-2023-11-10 00:37:11,320 - EmailAutomationLogger - INFO - Configuration saved successfully.
-2023-11-10 00:38:51,580 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/tests/test
-2023-11-10 00:38:51,581 - EmailAutomationLogger - INFO - Configuration saved successfully.
-2023-11-10 00:39:15,210 - EmailAutomationLogger - INFO - Configuration loaded successfully.
-2023-11-10 00:39:15,210 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb1 in position 2: invalid start byte
-2023-11-10 00:39:15,210 - EmailAutomationLogger - ERROR - An error occurred while loading data: 'utf-8' codec can't decode byte 0xb8 in position 3: invalid start byte
-2023-11-10 00:39:15,221 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/tests/test
-2023-11-10 00:39:15,225 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:01:18,650 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:01:18,656 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:01:18,660 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:01:18,661 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:01:18,662 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:04:45,775 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:04:45,776 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:04:45,776 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:04:45,792 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:04:45,793 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:04:45,799 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:04:45,803 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:04:45,804 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:04:45,804 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:14:49,712 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:14:49,713 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:14:49,713 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:16,154 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:15:16,154 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:15:16,155 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:41,576 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:15:41,578 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:15:41,578 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:41,594 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:15:41,595 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:15:41,600 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:15:41,604 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:41,606 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:15:41,606 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:15:56,011 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:15:56,012 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:15:56,012 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:56,029 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:15:56,030 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:15:56,035 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:15:56,038 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:15:56,039 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:15:56,039 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:17:21,458 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:17:21,459 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:17:21,459 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:17:21,476 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:17:21,477 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:17:21,484 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:17:21,487 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:17:21,488 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:17:21,490 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:17:28,022 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:17:41,505 - EmailAutomationLogger - INFO - Template C:/Users/±èÀÚÇö/Codes/AutomationScripts/FileMailer/templates/ÅÛÇÃ¸´ ¿¹½Ã.txt saved successfully.
+2023-11-10 20:18:07,466 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:18:07,467 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:18:07,467 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:18:07,485 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:18:07,486 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:18:07,491 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:18:07,495 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:18:07,495 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:18:07,496 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:34:22,293 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:34:22,295 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:34:22,295 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:34:22,312 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:34:22,313 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:34:22,319 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:34:22,323 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:34:22,323 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:34:22,324 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:34:53,500 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:34:53,501 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:34:53,501 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:35:06,374 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:35:06,375 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:35:06,375 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:35:54,294 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:35:54,295 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:35:54,295 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:35:56,281 - EmailAutomationLogger - INFO - Configuration loaded successfully.
+2023-11-10 20:35:56,282 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:35:56,283 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:35:58,925 - EmailAutomationLogger - INFO - Directory updated to C:/Users/±èÀÚÇö/Codes/AutomationScripts/Automailer
+2023-11-10 20:35:58,926 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:35:58,932 - EmailAutomationLogger - INFO - ContactManager data loaded successfully.
+2023-11-10 20:35:58,935 - EmailAutomationLogger - INFO - DepartmentManager data loaded successfully.
+2023-11-10 20:35:58,936 - EmailAutomationLogger - INFO - Configuration saved successfully.
+2023-11-10 20:35:58,937 - EmailAutomationLogger - INFO - Configuration saved successfully.

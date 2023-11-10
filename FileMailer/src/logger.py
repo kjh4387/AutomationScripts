@@ -16,6 +16,11 @@ class Logger:
 
         # Add the handler to the logger
         self.logger.addHandler(handler)
+        self.app = None
+
+    def set_app(self, app):
+        """ Set the reference to the Tkinter app. """
+        self.app = app
 
     def log(self, message, level=logging.INFO):
         """ Log a message with the specified logging level """
@@ -31,5 +36,12 @@ class Logger:
             self.logger.critical(message)
         else:
             self.logger.info(message)
+        if self.app:
+            formatted_message = self.format_message(message, level)
+            self.app.log_message(formatted_message)
 
 
+    def format_message(self, message, level):
+        """ Format the message for display in the GUI. """
+        level_name = logging.getLevelName(level)
+        return f"{level_name}: {message}"

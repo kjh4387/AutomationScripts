@@ -1,6 +1,9 @@
 {
-    "contact_data": "FileMailer/tests/contacts.csv",
-    "department_data": "FileMailer/tests/departments.csv",
-    "directory": "C:/Users/\uae40\uc790\ud604/Codes/AutomationScripts/FileMailer/tests/test",
-    "current_template_path": "C:/Users/\uae40\uc790\ud604/Codes/AutomationScripts/FileMailer/templates/testtemplate1.txt"
+    "contact_data": "FileMailer/contacts.csv",
+    "department_data": "FileMailer/departments.csv",
+    "directory": "./FileMailer/tests/test",
+    "current_template_path": "C:/Users/\uae40\uc790\ud604/Codes/AutomationScripts/FileMailer/templates/\ud15c\ud50c\ub9bf \uc608\uc2dc.txt",
+    "subject": "\uba54\uc77c \uc81c\ubaa9",
+    "template_variable_period": "",
+    "template_variable_manager": ""
 }
